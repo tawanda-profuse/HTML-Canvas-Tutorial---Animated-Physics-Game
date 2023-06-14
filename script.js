@@ -185,6 +185,8 @@ window.addEventListener("load", function () {
             this.fps = 70;
             this.timer = 0;
             this.interval = 1000 / this.fps;
+            this.eggTimer = 0;
+            this.eggInterval = 500;
             this.numberOfObstacles = 10;
             this.maxEggs = 10;
             this.obstacles = [];
@@ -224,11 +226,20 @@ window.addEventListener("load", function () {
             if (this.timer > this.interval) {
                 ctx.clearRect(0, 0, this.width, this.height);
                 this.obstacles.forEach(obstacle => obstacle.draw(context));
+                this.eggs.forEach(egg => egg.draw(context));
                 this.player.draw(context);
                 this.player.update();
                 this.timer = 0;
             }
             this.timer += deltaTime;
+            // add eggs periodically
+            if (this.eggTimer < this.eggInterval && this.eggs.length < this.maxEggs) {
+                this.addEgg();
+                this.eggTimer = 0;
+                console.log(this.eggs);
+            } else {
+                this.eggTimer += deltaTime; 
+            }
         }
 
         checkCollision(a, b) {
@@ -240,7 +251,7 @@ window.addEventListener("load", function () {
         }
 
         addEgg(){
-
+            this.eggs.push(new Egg(this));
         }
 
         init() {
